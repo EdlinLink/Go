@@ -21,16 +21,20 @@ SIZE = 1024
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #sock.bind(('192.168.1.2', 8001)) 
-sock.bind(('localhost', 8001)) 
+
+print "[Enter Server IP]: "
+ip = raw_input()
+sock.bind((ip, 8001)) 
 sock.listen(5)
 
 connection1, address1 = sock.accept()
+connection2, address2 = sock.accept()
+
 state_msg = Init("Black")
 connection1.send(state_msg)
 
 state = State(state_msg)
 
-connection2, address2 = sock.accept()
 state_msg = Init("White")
 connection2.send(state_msg)
 
@@ -43,6 +47,7 @@ while True:
 		connect = connection2
 
 	pos_msg_id = connect.recv(SIZE)
+	print "[Server]", pos_msg_id, "//"
 	id, pos_msg = pos_msg_id.split(";")
 
 	pos = Position(pos_msg, state.Turn)
